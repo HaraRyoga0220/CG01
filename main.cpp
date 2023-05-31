@@ -514,8 +514,7 @@ while (msg.message != WM_QUIT) {
 		barrier.Transition.pResource = swapChainResourse[backBufferIndex];
 
 		barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
-		barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-
+		barrier.Transition.StateAfter =D3D12_RESOURCE_STATE_RENDER_TARGET; 
 		commandList->ResourceBarrier(1, &barrier);
 
 		commandList->OMSetRenderTargets(1, &rtvHandles[backBufferIndex], false, nullptr);
