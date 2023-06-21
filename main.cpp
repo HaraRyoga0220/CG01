@@ -276,7 +276,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	wc.hInstance = GetModuleHandle(nullptr);
 	wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
 
-
 	RegisterClass(&wc);
 
 	const int32_t kClientWidth = 1280;
