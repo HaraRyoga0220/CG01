@@ -7,15 +7,14 @@
 #include<cassert>
 #include<dxgidebug.h>
 #include<dxcapi.h>
-//#include"externals/DirectXTex/d3dx12.h"
-//#include"externals/DirectXTex/DirectXTex.h"
+#include"externals/DirectXTex/d3dx12.h"
+#include"externals/DirectXTex/DirectXTex.h"
 #include<vector>
 #include<cmath>
 #include"externals/imgui/imgui.h"
 #include"externals/imgui/imgui_impl_dx12.h"
 #include"externals/imgui/imgui_impl_win32.h"
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-
 #pragma comment(lib,"dxcompiler.lib")
 #pragma comment(lib,"dxguid.lib")
 #pragma comment(lib,"d3d12.lib")
@@ -135,52 +134,54 @@ Matrix4x4 MakeIdentity4x4() {
 }
 
 Matrix4x4 MakePerspectiveFovMatrix(float forY, float aspectRatio, float nearClip, float farClip)
- {Matrix4x4 result;
-	
-result.m[0][0] = 1 / aspectRatio * 1/tanf(forY / 2);
-result.m[0][1] = 0;
-result.m[0][2] = 0;
-result.m[0][3] = 0;
+{
+	Matrix4x4 result;
 
-result.m[1][0] = 0;
-result.m[1][1] = 1 / tanf(forY / 2);
-result.m[1][2] = 0;
-result.m[1][3] = 0;
+	result.m[0][0] = 1 / aspectRatio * 1 / tanf(forY / 2);
+	result.m[0][1] = 0;
+	result.m[0][2] = 0;
+	result.m[0][3] = 0;
 
-result.m[2][0] = 0;
-result.m[2][1] = 0;
-result.m[2][2] = nearClip / (nearClip - farClip);
-result.m[2][3] = 1;
+	result.m[1][0] = 0;
+	result.m[1][1] = 1 / tanf(forY / 2);
+	result.m[1][2] = 0;
+	result.m[1][3] = 0;
 
-result.m[3][0] = 0;
-result.m[3][1] = 0;
-result.m[3][2] = -farClip * nearClip / (nearClip - farClip);
-result.m[3][3] = 0;
+	result.m[2][0] = 0;
+	result.m[2][1] = 0;
+	result.m[2][2] = nearClip / (nearClip - farClip);
+	result.m[2][3] = 1;
 
-return result;
+	result.m[3][0] = 0;
+	result.m[3][1] = 0;
+	result.m[3][2] = -farClip * nearClip / (nearClip - farClip);
+	result.m[3][3] = 0;
+
+	return result;
 }
-Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth) 
-{Matrix4x4 result;
+Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth)
+{
+	Matrix4x4 result;
 
-result.m[0][0] = width / 2;
-result.m[0][1] = 0;
-result.m[0][2] = 0;
-result.m[0][3] = 0;
+	result.m[0][0] = width / 2;
+	result.m[0][1] = 0;
+	result.m[0][2] = 0;
+	result.m[0][3] = 0;
 
-result.m[1][0] = 0;
-result.m[1][1] = -height / 2;
-result.m[1][2] = 0;
-result.m[1][3] = 0;
+	result.m[1][0] = 0;
+	result.m[1][1] = -height / 2;
+	result.m[1][2] = 0;
+	result.m[1][3] = 0;
 
-result.m[2][0] = 0;
-result.m[2][1] = 0;
-result.m[2][2] = maxDepth - minDepth;
-result.m[2][3] = 0;
+	result.m[2][0] = 0;
+	result.m[2][1] = 0;
+	result.m[2][2] = maxDepth - minDepth;
+	result.m[2][3] = 0;
 
-result.m[3][0] = left + width / 2;
-result.m[3][1] = top + height / 2;
-result.m[3][2] = minDepth;
-result.m[3][3] = 1;
+	result.m[3][0] = left + width / 2;
+	result.m[3][1] = top + height / 2;
+	result.m[3][2] = minDepth;
+	result.m[3][3] = 1;
 
 
 	return result;
@@ -188,8 +189,8 @@ result.m[3][3] = 1;
 
 
 Matrix4x4 viewMatrix = MakeViewportMatrix(100.0f, 200.0f, 600.0f, 300.0f, 0.0f, 1.0f);
-		
-Matrix4x4 projectionMatrix= MakePerspectiveFovMatrix(0.63f, 1.33f, 0.1f, 1000.0f);
+
+Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.63f, 1.33f, 0.1f, 1000.0f);
 
 
 
@@ -231,7 +232,7 @@ void Log(const std::wstring& message) {
 	OutputDebugStringA(ConvertString(message).c_str());
 }
 
-IDxcBlob*CompileShader(
+IDxcBlob* CompileShader(
 	//CompilerするShaderファイルへのパス
 	const std::wstring& filePath,
 	//Compilerに使用するProfile
@@ -306,7 +307,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg,
 		return true;
 	}
 
-	
+
 	switch (msg) {
 	case WM_DESTROY:
 		PostQuitMessage(0);
@@ -351,20 +352,20 @@ ID3D12Resource* CreateBufferResource(ID3D12Device* device, size_t sizeBytes) {
 Transform transform{ {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
 
 ID3D12DescriptorHeap* CreateDescriptorHeap(
-		ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible)
-	{
-	
-	
-	ID3D12DescriptorHeap* descriptorHeap = nullptr;
-		D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc{};
-		descriptorHeapDesc.Type = heapType;
-		descriptorHeapDesc.NumDescriptors = numDescriptors;
-		descriptorHeapDesc.Flags = shaderVisible ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-		HRESULT hr = device->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&descriptorHeap));
-		assert(SUCCEEDED(hr));
-		return descriptorHeap;
+	ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible)
+{
 
-	}
+
+	ID3D12DescriptorHeap* descriptorHeap = nullptr;
+	D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc{};
+	descriptorHeapDesc.Type = heapType;
+	descriptorHeapDesc.NumDescriptors = numDescriptors;
+	descriptorHeapDesc.Flags = shaderVisible ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+	HRESULT hr = device->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&descriptorHeap));
+	assert(SUCCEEDED(hr));
+	return descriptorHeap;
+
+}
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	OutputDebugStringA("Hello,DirectX!\n");
@@ -524,7 +525,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	hr = dxgiFactory->CreateSwapChainForHwnd(commandQueue, hwnd, &swapChainDesc, nullptr, nullptr, reinterpret_cast<IDXGISwapChain1**>(&swapChain));
 	assert(SUCCEEDED(hr));
 
-	
+
 
 	ID3D12Resource* swapChainResourse[2] = { nullptr };
 	hr = swapChain->GetBuffer(0, IID_PPV_ARGS(&swapChainResourse[0]));
@@ -561,7 +562,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	HANDLE fenceEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
 	assert(fenceEvent != nullptr);
 
-	
+
 	//dxcCompilerを初期化
 	IDxcUtils* dxcUtils = nullptr;
 	IDxcCompiler3* dxcCompiler = nullptr;
@@ -578,8 +579,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//RootSignature作成
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature{};
 	descriptionRootSignature.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-	
-	
+
+
 
 	////RootParameter作成.PixelShaderのMaterialとVertexShaderのTransform
 	D3D12_ROOT_PARAMETER rootParameters[2] = {};
@@ -608,7 +609,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		signatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature));
 	assert(SUCCEEDED(hr));
 
-	
+
 
 
 	//InputLayout
@@ -705,7 +706,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	*materialData = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
 
-
+	//583
 
 	//ビューポート
 	D3D12_VIEWPORT viewport{};
@@ -724,24 +725,25 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	scissorRect.right = kClientWidth;
 	scissorRect.top = 0;
 	scissorRect.bottom = kClientHeight;
+
+	Transform transform{ {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
+
+
+
+
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGui::StyleColorsDark();
+	ImGui_ImplWin32_Init(hwnd);
+	ImGui_ImplDX12_Init(device,
+		swapChainDesc.BufferCount,
+		rtvDesc.Format,
+		srvDescriptorHeap,
+		srvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(),
+		srvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 	
-Transform transform{ {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
-
-
-
-
 	MSG msg{};
 
-IMGUI_CHECKVERSION();
-ImGui::CreateContext();
-ImGui::StyleColorsDark();
-ImGui_ImplWin32_Init(hwnd);
-ImGui_ImplDX12_Init(device,
-	swapChainDesc.BufferCount,
-	rtvDesc.Format,
-	srvDescriptorHeap,
-	srvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(),
-	srvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 
 	while (msg.message != WM_QUIT) {
 
@@ -754,6 +756,7 @@ ImGui_ImplDX12_Init(device,
 			ImGui_ImplDX12_NewFrame();
 			ImGui_ImplWin32_NewFrame();
 			ImGui::NewFrame();
+			ImGui::ShowDemoWindow();
 			transform.rotate.y += 0.03f;
 			Matrix4x4 worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
 			*wvpData = worldMatrix;
@@ -773,15 +776,19 @@ ImGui_ImplDX12_Init(device,
 			barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
 			//TransitionBarrierを張る
 			commandList->ResourceBarrier(1, &barrier);
-			
-			ImGui::ShowDemoWindow();
-			ImGui::Render();
-			
+
+		
+
 			//描画先のRTVを設定する
 			commandList->OMSetRenderTargets(1, &rtvHandles[backBufferIndex], false, nullptr);
 			//指定した色で画面全体をクリアする
 			float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };
 			commandList->ClearRenderTargetView(rtvHandles[backBufferIndex], clearColor, 0, nullptr);
+
+			//描画用のDescriptorHeapの設定
+			ID3D12DescriptorHeap* descriptorHeaps[] = { srvDescriptorHeap };
+			commandList->SetDescriptorHeaps(1, descriptorHeaps);
+
 			commandList->RSSetViewports(1, &viewport);
 			commandList->RSSetScissorRects(1, &scissorRect);
 			//RootSignatureを設定、PSOに設定しているけど別途設定が必要
@@ -794,10 +801,10 @@ ImGui_ImplDX12_Init(device,
 			commandList->SetGraphicsRootConstantBufferView(0, materialResource->GetGPUVirtualAddress());
 			commandList->SetGraphicsRootConstantBufferView(1, wvpResource->GetGPUVirtualAddress());
 
-
+			ImGui::Render();
 			commandList->DrawInstanced(3, 1, 0, 0);
+			ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList);
 
-			
 			//今回はRenderTagetからPresentにする
 			barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
 			barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
@@ -806,8 +813,8 @@ ImGui_ImplDX12_Init(device,
 			//コマンドリストの内容を確定させる。すべてのコマンドを積んでからCloseすること
 			hr = commandList->Close();
 			assert(SUCCEEDED(hr));
-			
-			
+
+
 			//GPUにコマンドリストの実行を行わせる
 			ID3D12CommandList* commandLists[] = { commandList };
 			commandQueue->ExecuteCommandLists(1, commandLists);
@@ -825,7 +832,7 @@ ImGui_ImplDX12_Init(device,
 				WaitForSingleObject(fenceEvent, INFINITE);
 			}
 			//次のフレーム用のコマンドリストを準備
-			
+
 			hr = commandAllocator->Reset();
 			assert(SUCCEEDED(hr));
 			hr = commandList->Reset(commandAllocator, nullptr);
@@ -835,7 +842,7 @@ ImGui_ImplDX12_Init(device,
 	graphicsPipelineState->Release();
 	signatureBlob->Release();
 	materialResource->Release();
-	
+
 	if (errorBlob) {
 		errorBlob->Release();
 		pixelShaderBlob->Release();
